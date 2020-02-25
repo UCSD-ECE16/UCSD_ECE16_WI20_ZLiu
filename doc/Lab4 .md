@@ -206,7 +206,7 @@ Q. Try different led Brightness. Is brighter always better? Why or why not.
 >
 > 0*4F 
 >
-> ![C1_B4f](fig/Lab4/C1_B4f.png)
+> ![C1_B4f](fig/Lab4/C1_B4F.png)
 
 **Deliverable**: Tune the settings so that you ultimately get a **sampling rate of 50Hz**. What setting did you land on that gave you a clean signal and at the right sampling rate?
 
