@@ -15,10 +15,12 @@ sys.path.insert(1, 'Libraries')
 from Connection import Connection
 from Visualize import Visualize
 from Data import Data
+from HR import HR 
 
 serial_name = '/dev/cu.usbserial-14330'
 baud_rate = 115200
 ser = serial.Serial(serial_name, 115200)
+num_samples = 14000
 
 
 class Wearable:
@@ -34,14 +36,22 @@ class Wearable:
         #start sending data
         while self.connection.data.get_num_samples() < num_samples: #collect x samples
             try:
-                self.connection.receive_data()#receive data
+                data_array = self.connection.receive_data()#receive data
             except(KeyboardInterrupt):
                 self.connection.close_connection()#deal with exception
                 break#end streaming
     
     def main(self):
-        self.collect_data(num_samples)#number of samples to collect)
+        self.collect_data(num_samples) #number of samples to collect)
         sampling_rate = self.connection.data.calc_sampling_rate(data_array) #calculate sampling rate
+
+        time = data_array[:,0]
+        signal = (-1)*data_array[:,3]
+        # print(signal)
+        n = calc_heart_rate_time(signal,1000/19.97)
+        print(n)
+        plotting();
+
 
 wearable = Wearable(serial_name, baud_rate)
 if __name__=='__main__':

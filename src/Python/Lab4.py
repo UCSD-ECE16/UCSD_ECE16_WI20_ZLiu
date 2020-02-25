@@ -245,7 +245,7 @@ plt.show()
 def setup_serial():
     serial_name = '/dev/cu.usbserial-14330'  # replacing using the actual port 
     ser = serial.Serial(serial_name, 115200)    # open serial port 
-    print(ser.name)
+    # print(ser.name)
     return ser 
 def receive_sample(ser):
     global string_buffer
@@ -309,7 +309,7 @@ def calc_sampling_rate(data_array):
     interval = interval[1:]
     # print(interval)
     average_interval = np.mean(interval)
-    print(average_interval)
+    # print(average_interval)
 
 
 def plotting():
@@ -342,12 +342,31 @@ def plotting():
     plt.show()
 
 
+def calc_heart_rate_time(signal,fs):
+        
+    signal = signal - np.mean(signal)#filter the signal to remove baseline drifting
+    signal = moving_average(signal,4)   #filter the signal to remove high frequency noise
+    signal = normalize_signal(signal)  #Normalize the signal between 0 and 1
+    processed_signal = signal_diff(signal) #Explore using the signal directly or potentially using the diff of the signal. 
+    maximums = argrelextrema(processed_signal, np.greater)
+    maximums = np.take(processed_signal, maximums)
+    threshold = 2.2 * np.mean(maximums) #Count the number of times the signal crosses a threshold.
+    # print(threshold)
+    count = (processed_signal > threshold).sum(axis=0)
+    # print(count)
+    size = processed_signal.size #Calculate the beats per minute. 
+    T = 1/fs 
+    time = T * size # the time of for whole signal. in s. 
+    # print(time)
+    n = (count/time) * 60
+    return n 
+
 def main():
     ser = setup_serial()
     data_array = receive_data(ser)
     calc_sampling_rate(data_array)
     np.savetxt("Data_10_.csv", data_array, delimiter=",")
-    # data_array = np.genfromtxt('data_file.csv', delimiter=',')
+    signal = np.genfromtxt('data_file.csv', delimiter=',')
     plotting()
     ser.close()
 

@@ -55,7 +55,7 @@ class Connection:
             data_string = ''.join(self.string_buffer)
             print(data_string)
             temp_data_array = np.fromstring(data_string,dtype=int,sep=',')
-            self.data.add_data(temp_data_array) #using the Data module
+            data_array = self.data.add_data(temp_data_array) #using the Data module
             self.string_buffer = []
         else:
            self.string_buffer.append(c)
