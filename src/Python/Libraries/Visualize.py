@@ -5,7 +5,11 @@ Created on Mon Feb 24 23:27:33 2020
 
 @author: iris
 """
-
+serial_name = '/dev/cu.usbserial-14330'
+baud_rate = 115200
+import serial
+ser = serial.Serial(serial_name, baud_rate)
+import numpy as np
 class Visualize:
     def plotData(data_array):
         plt.clf()

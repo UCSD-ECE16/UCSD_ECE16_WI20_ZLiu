@@ -8,7 +8,13 @@ Created on Mon Feb 24 23:27:22 2020
 
 import serial
 import numpy as np
-from Libraries.Data import Data #need to import the library you need
+import sys
+import serial
+sys.path.insert(1, 'Libraries')
+from Data import Data #need to import the library you need
+serial_name = '/dev/cu.usbserial-14330'
+baud_rate = 115200
+ser = serial.Serial(serial_name, baud_rate)
 
 class Connection:
 
@@ -21,15 +27,15 @@ class Connection:
 
     def setup_connection(self):
         self.ser = serial.Serial(self.serial_name, self.baud_rate)  # open serial port
-        start_streaming()
+        
         
     def close_connection(self):
-        end_streaming()
+        
         ser.close()
         #close the serial connection
         
     def send_serial(self, message):
-        start_streaming(self)
+        self.start_streaming(self)
         #write message to serial
 
     def read_serial(self):

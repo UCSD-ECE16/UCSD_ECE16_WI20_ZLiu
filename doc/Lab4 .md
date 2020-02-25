@@ -278,13 +278,23 @@ Q. Show a scatter plot of your heart rate calculation (y axis) vs the heart rate
 
 Q. We made a few mistakes in the above code, identify them and fix them. :)
 
-To open the Serial port, we also need to start_streaming(). 
+
 
 ![C31](fig/Lab4/C31.png)
 
+There should be a self here. 
+
+![C34](fig/Lab4/C34.png)
+
+should be (self, new_data)
+
+![C33](fig/Lab4/C33.png)
+
+from Data import Data. 
 
 
-Q. Now add a new module in Libraries called HR.py for the heart rate and signal processing methods we made in this lab. And then in the Wearable.py, add the code to calculate heart rate and print out the heart rate. Show in a gif capturing the pulse for 10 seconds, plot and print out the calculated heart rate. 
+
+Q. Now add a new module in Libraries called HR.py for the heart rate and signal processing methods we made in this lab. And then in the Wearable.py, add the code to calculate heart rate and print out the heart rate. **Show in a gif capturing the pulse for 10 seconds, plot and print out the calculated heart rate. **
 
 
 

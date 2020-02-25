@@ -5,18 +5,21 @@ Created on Mon Feb 24 23:25:46 2020
 
 @author: iris
 """
-
+# import numpy as np 
 # some_file.py
 import sys
+import serial
 # insert at 1, 0 is the script path (or '' in REPL)
 sys.path.insert(1, 'Libraries')
-
-
 
 from Connection import Connection
 from Visualize import Visualize
 from Data import Data
-num_samples = 50
+
+serial_name = '/dev/cu.usbserial-14330'
+baud_rate = 115200
+ser = serial.Serial(serial_name, 115200)
+
 
 class Wearable:
     def __init__(self, serial_name, baud_rate):
@@ -24,8 +27,10 @@ class Wearable:
     
     def collect_data(self, num_samples):
         self.connection.close_connection()
+        self.connection.end_streaming()
         #first make sure data sending is stopped by ending streaming
-        setup_connection()
+        self.connection.setup_connection()
+        self.connection.start_streaming()
         #start sending data
         while self.connection.data.get_num_samples() < num_samples: #collect x samples
             try:
@@ -38,5 +43,6 @@ class Wearable:
         self.collect_data(num_samples)#number of samples to collect)
         sampling_rate = self.connection.data.calc_sampling_rate(data_array) #calculate sampling rate
 
+wearable = Wearable(serial_name, baud_rate)
 if __name__=='__main__':
-    main()
+    wearable.main()
