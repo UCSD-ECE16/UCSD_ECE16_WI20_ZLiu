@@ -32,7 +32,7 @@ int time_last_tap; //initiate the last tap time at 0
 int timer_state = 0; 
 
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(115200);
   //SerialBT.begin("Iris's Firebeetle"); //Defaults to 115200 Baud Rate
   // setupMotor();
    //ACCEL VARs
@@ -44,6 +44,7 @@ void setup(){
   int timer_seconds = 0;
   setupADC();
   initDisplay();
+  setupHR();
 }
 
 void Lab2_C1(){
@@ -86,10 +87,14 @@ void Lab2_C4(){
 
 
 void Lab3(){
-  receiveMessage(); //checks for serial message
+  //receiveMessage(); //checks for serial message
   sendData(); //sends data via serial if suppose to
 }
 
+void Lab4(){
+  //receiveMessage(); //checks for serial message
+  sendData(); //sends data via serial if supposed to
+}
 
 void loop() {
   //Lab2_C1();
@@ -98,5 +103,5 @@ void loop() {
   //stateMachineTimer();
   //Lab2_C4();
   //showMessage("in_text", 1, true);  // This works.
-  Lab3();
+  Lab4();
 }

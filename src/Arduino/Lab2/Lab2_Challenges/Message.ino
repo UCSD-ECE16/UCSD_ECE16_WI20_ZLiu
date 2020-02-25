@@ -25,17 +25,16 @@ void receiveMessage(){
     }
 }
 
-int sampling_rate = 1000;   //sampling rate in Hz
+int sampling_rate = 100000;   //sampling rate in Hz
 unsigned long sampling_delay = calcSamplingDelay(sampling_rate);   //microseconds between samples
 unsigned long last_sample_time = 0;   //microsecond of last sample
 
-bool sending_data = false; //to send data?
+bool sending_data = true; //to send data?
 
 void sendData(){
     if(sending_data){
-        if(micros()-last_sample_time >= sampling_delay){
-            last_sample_time = micros();
-//            Serial.println("The last sample time is");
+        if(millis()-last_sample_time >= sampling_delay){
+            last_sample_time = millis();
             readADC();
             Serial.print(last_sample_time);
             Serial.print(',');
@@ -43,13 +42,16 @@ void sendData(){
             Serial.print(',');
             Serial.print(accelY_Val);
             Serial.print(',');
-            Serial.println(accelZ_Val);
+            Serial.print(accelZ_Val);
+            Serial.print(',');
+            Serial.println(particleSensor.getIR());
         }
     }
+    delay(10);
 }
 
 long calcSamplingDelay(long sampling_rate){
-    return 1000000/sampling_rate;//number of microseconds to wait between samples
+    return 1000/sampling_rate;//number of microseconds to wait between samples
 }
 
 void checkMessage(){
