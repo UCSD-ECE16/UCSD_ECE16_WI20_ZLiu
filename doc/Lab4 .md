@@ -152,7 +152,7 @@ Smooth the noise out by using the moving average.
 
 ### Detrending a Moving Average
 
-![Detrend](fig/Lab4/Detrend.png)
+![Detrend](fig/Lab4/detrend.png)
 
 ## Challenges 
 
