@@ -243,7 +243,7 @@ plt.show()
 # %% Challenge (1)
 
 def setup_serial():
-    serial_name = '/dev/cu.usbserial-14330'  # replacing using the actual port 
+    serial_name = '/dev/cu.usbserial-14230'  # replacing using the actual port 
     ser = serial.Serial(serial_name, 115200)    # open serial port 
     # print(ser.name)
     return ser 
@@ -275,9 +275,10 @@ def receive_data(ser):
     # Send start data
     sample_number = 0
     ser.write('start data\n'.encode('utf-8'))
-    while sample_number < 14000:
+    while sample_number < 500:
         try:
             sample_number = sample_number + 1
+            print(sample_number)
             data_array = receive_sample(ser)
         except(KeyboardInterrupt):
             # Send stop data 
@@ -286,10 +287,13 @@ def receive_data(ser):
             print("Exiting program due to KeyboardInterrupt")
             break
     ser.write('stop data'.encode('utf-8'))
-    np.savetxt("xyzr1.csv", data_array, delimiter=",")
+    hb_array = data_array[4]
+    np.savetxt("5_14000_ReferenceHR.csv", hb_array, delimiter=",")
     # print(data_array)
     return data_array
 # Send stop data
+
+
 
 
 
@@ -312,7 +316,7 @@ def calc_sampling_rate(data_array):
     # print(average_interval)
 
 
-def plotting():
+def plotting(data_array):
     plt.clf()
     time = data_array[:, 0]
     x = data_array[:, 1]
@@ -341,6 +345,49 @@ def plotting():
     plt.plot(time,r)
     plt.show()
 
+def Four_Key_Analysis:
+    
+    import numpy as np
+    from scipy.stats import pearsonr
+    import matplotlib.pyplot as plt
+    
+    gnd = #reference heart rate
+    est = #estimate of your algorithm
+    
+    [R,p] = pearsonr(gnd,est)
+    
+    plt.figure(1)
+    plt.clf()
+    plt.subplot(121)
+    plt.plot(gnd,gnd)
+    plt.scatter(gnd,est)
+    plt.text(min(gnd) + 2,max(est)+2,"R="+str(round(R,2)))
+    plt.ylabel("estimate HR (BPM)")
+    plt.xlabel("reference HR (BPM)")
+    
+    avg = #take the average of gnd and est
+    dif = #take the difference of gnd and est
+    std = #get the standard deviation of the difference (using np.std)
+    bias = #the mean value of the difference
+    upper_std = #the bias plus 1.96 times the std
+    lower_std = #the bias minus 1.96 times the std
+    
+    plt.subplot(122)
+    plt.scatter(avg, dif)
+    plt.plot([np.min(avg),np.max(avg)],[bias,bias])
+    plt.plot([np.min(avg),np.max(avg)],[upper_std, upper_std])
+    plt.plot([np.min(avg),np.max(avg)],[lower_std, lower_std])
+    plt.text(np.max(avg)+5,bias,"mean="+str(round(np.mean(gnd-est),2)))
+    plt.text(np.max(avg)+5,upper_std,"1.96STD="+str(round(upper_std,2)))
+    plt.text(np.max(avg)+5,lower_std,"-1.96STD="+str(round(lower_std,2)))
+    plt.ylabel("Difference of Est and Gnd (BPM)")
+    plt.xlabel("Average of Est and Gnd (BPM)")
+    plt.show()
+
+
+
+
+
 
 def calc_heart_rate_time(signal,fs):
         
@@ -365,9 +412,9 @@ def main():
     ser = setup_serial()
     data_array = receive_data(ser)
     calc_sampling_rate(data_array)
-    np.savetxt("Data_10_.csv", data_array, delimiter=",")
-    signal = np.genfromtxt('data_file.csv', delimiter=',')
-    plotting()
+    # np.savetxt("Data_10_.csv", data_array, delimiter=",")
+    # signal = np.genfromtxt('data_file.csv', delimiter=',')
+    plotting(data_array)
     ser.close()
 
 if __name__=='__main__':

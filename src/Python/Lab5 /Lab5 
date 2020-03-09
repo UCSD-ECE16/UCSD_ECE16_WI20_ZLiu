@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar  9 10:37:53 2020
+
+@author: iris
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+data_array = np.genfromtxt('appendix_a.csv', delimiter=',')#get data from Appendix A and save as .csv.
+
+fs = 50 #sampling rate in Hz
+t = data_array[:,0]#get the time array
+s = data_array[:,4]#get the x-acceleration array
+
+plt.subplot(211)
+plt.plot(t, s)
+plt.subplot(212)
+################The Key Here#########################
+# calculates the `power distribution over the frequency domain, the higher the more 
+plt.psd(s, NFFT=len(t), Fs=fs) #plot the power spectral density
+plt.show()

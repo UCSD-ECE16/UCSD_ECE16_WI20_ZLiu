@@ -152,6 +152,10 @@ Smooth the noise out by using the moving average.
 
 ### Detrending a Moving Average
 
+![accelerometer](fig/Lab4/Detrendcodes.png)
+
+### **Looking at the signal in different ways**
+
 ![Detrend](fig/Lab4/detrend.png)
 
 ## Challenges 
@@ -272,7 +276,7 @@ Q. Show a scatter plot of your heart rate calculation (y axis) vs the heart rate
 
 > ![truevscal](fig/Lab4/truevscal.png)
 >
-> RMSE: 36.57 
+> RMSE: 36.57
 
 ### Challenge 3 
 

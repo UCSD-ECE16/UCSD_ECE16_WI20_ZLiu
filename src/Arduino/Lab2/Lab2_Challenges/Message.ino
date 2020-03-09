@@ -25,7 +25,7 @@ void receiveMessage(){
     }
 }
 
-int sampling_rate = 100000;   //sampling rate in Hz
+int sampling_rate = 50;   //sampling rate in Hz
 unsigned long sampling_delay = calcSamplingDelay(sampling_rate);   //microseconds between samples
 unsigned long last_sample_time = 0;   //microsecond of last sample
 
