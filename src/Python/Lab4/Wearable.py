@@ -1,58 +1,58 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb 24 23:25:46 2020
+Created on Wed Jan  8 17:14:57 2020
 
-@author: iris
+@author: edwardwang
 """
-# import numpy as np 
-# some_file.py
-import sys
-import serial
-# insert at 1, 0 is the script path (or '' in REPL)
-sys.path.insert(1, 'Libraries')
 
-from Connection import Connection
-from Visualize import Visualize
-from Data import Data
-from HR import HR 
-
-serial_name = '/dev/cu.usbserial-14330'
-baud_rate = 115200
-ser = serial.Serial(serial_name, 115200)
-num_samples = 14000
-
+from Libraries.Connection import Connection
+from Libraries.Visualize import Visualize
+from Libraries.HR import HR
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Wearable:
     def __init__(self, serial_name, baud_rate):
         self.connection = Connection(serial_name, baud_rate)
     
     def collect_data(self, num_samples):
-        self.connection.close_connection()
         self.connection.end_streaming()
-        #first make sure data sending is stopped by ending streaming
-        self.connection.setup_connection()
         self.connection.start_streaming()
-        #start sending data
-        while self.connection.data.get_num_samples() < num_samples: #collect x samples
+        while self.connection.data.get_num_samples() < num_samples:
             try:
-                data_array = self.connection.receive_data()#receive data
+                self.connection.receive_data()
             except(KeyboardInterrupt):
-                self.connection.close_connection()#deal with exception
-                break#end streaming
+                self.connection.end_streaming()
+                self.connection.close_connection()
+                print("Exiting program due to KeyboardInterrupt")
+                break
+        self.connection.end_streaming()
     
     def main(self):
-        self.collect_data(num_samples) #number of samples to collect)
-        sampling_rate = self.connection.data.calc_sampling_rate(data_array) #calculate sampling rate
+        
+        self.collect_data(500)
+        print(self.connection.data.data_array)
+        self.connection.close_connection()
+        collected_data = self.connection.data
+        self.connection.data.calc_sampling_rate()
+        test = self.connection.data.sampling_rate
 
-        time = data_array[:,0]
-        signal = (-1)*data_array[:,3]
-        # print(signal)
-        n = calc_heart_rate_time(signal,1000/19.97)
-        print(n)
-        plotting();
+        fs = int(test) #round to nearest int
+        np.savetxt("05_09_.csv", collected_data.data_array, delimiter=",")
+        
+        data_array = np.genfromtxt('05_09_.csv', delimiter=',')
+        [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(data_array[:,4],fs)
+        time = (data_array[:,0] - data_array[0,0])/1e6 #have time start at 0 and in seconds
+        plt.clf()
+        plt.plot(time, HR.normalize_signal(HR.detrend(-data_array[:,4],fs)))
+        plt.plot(time, s_thresh_up)
+        print("BPM = "+str(BPM_Estimate))      
 
 
-wearable = Wearable(serial_name, baud_rate)
-if __name__=='__main__':
+def main():
+    wearable = Wearable('/dev/cu.usbserial-14330',115200)
     wearable.main()
+
+if __name__== "__main__":
+    main()
