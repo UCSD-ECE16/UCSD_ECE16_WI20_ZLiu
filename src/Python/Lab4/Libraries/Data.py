@@ -7,6 +7,10 @@ Created on Tue Jan 28 12:26:35 2020
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
+import scipy 
+from scipy import signal
+from matplotlib.gridspec import GridSpec
 
 class Data:
     
@@ -30,6 +34,38 @@ class Data:
         self.sampling_rate = 1000000/mean_diff
         print(self.sampling_rate)
         
+        
+    #%% Data processing for machine learning 
+    def moving_average(self, s,n_avg):
+        ma = np.zeros_like(s)
+        for i in np.arange(0,len(s)):
+          ma_period = s[i : i + n_avg]
+          # print(ma_period.shape)
+          # print(ma_period)
+          ma[i] = np.mean(ma_period,axis=0) # mean of s from index i to i+n_avg
+          # print(ma[i])
+        return s - ma
+    
+    def detrend(self, s,n_avg): #remove the moving average from the signal
+        ma = moving_average(s,n_avg)
+        return ma #s minus the moving_average
+
+
+        
+    def normalize_signal(self, s):
+            norm_signal = (s - np.min(s))/(np.max(s)-np.min(s))
+            return norm_signal
+    
+    def LowPassFilter(self, s):
+        # The filter cutoff needs to be normalized between 0 and 1, 
+        # where 1 is the Nyquist frequency
+        filter_order = 3 
+        Nyquist_Freqs = 50
+        filter_cutoff = 5 / Nyquist_Freqs
+        b,a = signal.butter(filter_order, filter_cutoff, btype='low')
+        s_filt = signal.lfilter(b,a,s)
+        return s_filt
+
 
 
         

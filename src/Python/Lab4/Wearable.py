@@ -9,8 +9,19 @@ Created on Wed Jan  8 17:14:57 2020
 from Libraries.Connection import Connection
 from Libraries.Visualize import Visualize
 from Libraries.HR import HR
+from Libraries.ML import ML 
 import matplotlib.pyplot as plt
 import numpy as np
+import re
+import scipy 
+from scipy import signal
+from matplotlib.gridspec import GridSpec
+from sklearn.mixture import GaussianMixture as GMM
+from scipy.stats import pearsonr 
+from Libraries.Data import Data
+
+
+
 
 class Wearable:
     def __init__(self, serial_name, baud_rate):
@@ -48,11 +59,18 @@ class Wearable:
         plt.plot(time, HR.normalize_signal(HR.detrend(-data_array[:,4],fs)))
         plt.plot(time, s_thresh_up)
         print("BPM = "+str(BPM_Estimate))      
+        
+
 
 
 def main():
-    wearable = Wearable('/dev/cu.usbserial-14330',115200)
-    wearable.main()
+    # wearable = Wearable('/dev/cu.usbserial-14330',115200)
+    # wearable.main()
+    ml = ML()
+    directory = "/Users/iris/UCSD_ECE16_WI20_ZLiu/src/Python/Lab4/Data/training/"
+    ml.train_hr_model(directory)
+    result_ml = ml.test_hr_model(directory)
+    print(result_ml)
 
 if __name__== "__main__":
     main()

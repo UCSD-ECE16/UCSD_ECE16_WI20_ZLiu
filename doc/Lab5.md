@@ -224,8 +224,6 @@ Codes:
 
 Q. what is the correct regex to get trial “0” for any subject given our naming convention “ID_Trial_HR.csv”. 
 
-
-
 all_files = glob.glob("/Users/iris/UCSD_ECE16_WI20_ZLiu/src/Python/Lab4/Data/training/*01*.csv")
 
 >  all_files = glob.glob("/Users/iris/UCSD_ECE16_WI20_ZLiu/src/Python/Lab4/Data/*01*.csv") (sorry the asteroid disappeared in markdown. There's respectively one before & after 01)
@@ -270,13 +268,107 @@ Two folders' way of organizing
 
 > For the documentation, I printed out the size & values of list_ref and list_sub, and they seem correct. 
 >
+> I was only doing this to the training data here, which I changed in the next challenge. 
+>
 > <img src="fig/Lab5/C4_2.png" alt="T2" style="zoom:50%;" />
+>
+> I also printed out the size of the list_data 
+>
+> <img src="fig/Lab5/C4_3.png" alt="T2" style="zoom:50%;" />
+>
+> And here are some graphs by the codes: for i in range(0, 119):
+>
+> <pre><code>    q = 0
+> 	predicted = gmm.predict(list_data[i*500 : (i+1)*500].reshape(-1, 1))
+>     # print(list_data[i*500 : (i+1)*500])
+>     plt.plot(predicted)
+>     plt.show()
+>
+> <img src="fig/Lab5/C4_4.png" alt="T2" style="zoom:50%;" />
 
 ### Challenge 5: Gaussian Mixture Model 
 
 Take advantage of our signal's property to utilize gaussian mixture model to perform peak detection from our PPG using unsupervised learning. 
 
-The sketched 2 Gaussian on the histogram 
+**The sketched 2 Gaussian on the histogram **
 
 <img src="fig/Lab5/2_Gaussian.png" alt="T3" />
 
+**A Failed attempt **
+
+Here are some graphs of the prediction, which corresponds to some very unreasonable results. 
+
+<img src="fig/Lab5/C5_1.png" alt="T3" />
+
+**Documentation**
+
+The plotting of the predicted and the original signal. 
+
+<img src="fig/Lab5/C5_2.png" alt="T3" />
+
+**My algorithm to calculate the heart rate based on the output of GMM **
+
+The idea is that every time the output goes to 1, it means that a main peak is founded and so is a heart beat. 500 points are generally 10secs, since the sampling rate is 50 (50 points per sec.) I checked the data csv files and this is true. So I mulplied the predicted result by 10 to calculate the heart beat in one min, aka heart rate. 
+
+<pre><code>predicted_peaks, _ = scipy.signal.find_peaks(test_pred)
+print('predicted heart rate')
+print(len(predicted_peaks)*6)
+
+The predicted heart rate for the whole pool 3of data: 
+
+<img src="fig/Lab5/C5_3.png" alt="T3" />
+
+Q. What is the difference between leave-one-out validation and leave-one-subject-out validation? Which are we doing and why is this important, and why would it be an issue if we used the other validation method given what we are building? 
+
+> We do leave-one-subject validation. 
+>
+> The differnce: in leave-one-out validation, all subjects are regarded as created equal. In leave-one-subject-out validation, data from each subject is not created equal. 
+>
+> Why: In our data, each person's data is not created equal. 
+>
+> Problem: If we do not leave data from one subject for validation, we cannot prove that it works for a subject that the model has never seen before. 
+
+The plotting of the results 
+
+(There is a small part which is predicted very badly. I think the data of them were not nice.)
+
+<img src="fig/Lab5/C6_1.png" alt="T3" />
+
+### Challenge 6
+
+So, for the documentation that I got this working, I'd show how I got this working. 
+
+> Under ML class, you should have three methods. train_hr_model(self, directory)calc_hr(self,s,fs)test_hr_model(self,directory)
+
+In order not to include any methods for data_processing in ML.py, I moved data_processing functions into Data.py and included it in the ML, as shown in the picture below.  
+
+<img src="fig/Lab5/C6_2.png" alt="T3" />
+
+> train_hr_model is basically what you built in Challenge 5. What you’ll want to do is to save the gmm model as an instance attribute. 
+
+<img src="fig/Lab5/C6_3_1.png" alt="T3" />
+
+<img src="fig/Lab5/C6_3_2.png" alt="T3" />
+
+> calc_hr will then use the trained algorithm to calculate the heart rate, given the sampling rate and the signal. calc_hr should return the heart rate in BPM. 
+
+<img src="fig/Lab5/C6_4.png" alt="T3" />
+
+> test_hr_directory will test all the files in a directory using the trained heart rate detection model and **return a 2xnumber of samples numpy array where the first column is the reference heart rate and the second column is the estimate.** 
+
+<img src="fig/Lab5/C6_5.png" alt="T3" />
+
+(the main is just for trying. I moved it the the wearable.py later.)
+
+>  And finally, in your main Wearables.py, create a method that first calls the training method and then calls the test method.
+
+<img src="fig/Lab5/C6_6.png" alt="T3" />
+
+**Finally, once you feel confident in your algorithm, run your heart rate algorithm using GMM for peak detection on the reserved test data. And like before, show the results using correlation and bland-altman plot. Remember to interpret the graphs with the four key analysis and identify strengths and weaknesses of your algorithm.** 
+**No knowledge check, documentation is worth double points on this one.** 
+
+<img src="fig/Lab5/C6_1.png" alt="T3" />
+
+For the last documentation, let's look at the wearable.py uses the ML.py to print out all the testing results. 
+
+<img src="fig/Lab5/C6_8.gif" alt="T3" />
