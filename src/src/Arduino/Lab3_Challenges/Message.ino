@@ -1,4 +1,4 @@
-/* 
+
 //OLED VARs
 char in_text[20];                // Character buffer
 int in_text_index = 0;
@@ -63,4 +63,3 @@ void checkMessage(){
     delay(1);
   }
 }
-*/

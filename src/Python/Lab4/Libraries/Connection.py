@@ -5,7 +5,6 @@ Created on Wed Jan  8 17:15:27 2020
 
 @author: edwardwang
 """
-
 import serial
 import numpy as np
 from Libraries.Data import Data

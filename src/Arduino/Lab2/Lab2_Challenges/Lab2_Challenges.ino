@@ -44,7 +44,7 @@ void setup(){
   int timer_seconds = 0;
   setupADC();
   initDisplay();
-  setupHR();
+  // setupHR();
 }
 
 void Lab2_C1(){

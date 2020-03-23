@@ -237,14 +237,6 @@ def calc_heart_rate_freq(signal,fs):
     index_of = np.argmax(peaks)
     q = Freqs[index[index_of]]
     
-    """
-    while (q > 2):
-        peaks = peaks[0: index_of - 1]
-        print(peaks)
-        index_of = np.argmax(peaks)
-        q = Freqs[index[index_of]]
-        print(q)
-    """
     
     # print(index_)
     # index_ = 3 
@@ -258,37 +250,7 @@ def calc_heart_rate_freq(signal,fs):
 
 
 def main():
-    """
-    data_array = np.genfromtxt('appendix_a.csv', delimiter=',')
-    d1,d2, d3, d4, d5, d6, d7, d8, d9, d10 = data()
-    hr_data = np.zeros((500, 50))
-    hr_data[0:len(d1),0:5] = d1
-    hr_data[0:len(d2),5:10] = d2
-    hr_data[0:len(d3),10:15] = d3 
-    hr_data[0:len(d4),15:20] = d4 
-    hr_data[0:len(d5),20:25] = d5 
-    hr_data[0:len(d6),25:30] = d6 
-    hr_data[0:len(d7),30:35] = d7 
-    hr_data[0:len(d8),35:40] = d8
-    hr_data[0:len(d9),40:45] = d9 
-    hr_data[0:len(d10),45:50] = d10 
-    # get data from Appendix A and save as .csv.
-    """
     fs = 50 #sampling rate in Hz
-    """
-    t = data_array[:,0]# get the time array
-    s = data_array[:,4]# get the x-acceleration array
-    y = data_array[:,2]
-    z = data_array[:,3]
-    s = detrend(s, 6)
-    y = detrend(y, 6)
-    z = detrend(z, 6)
-    # plot(t, y, fs)
-    # plot(t, z, fs)
-    
-    # plot(t, s, fs)
-
-    """
     # graphs()
     signal = np.genfromtxt('05_10_85.csv', delimiter=',')
     calc_heart_rate_freq(signal,fs)

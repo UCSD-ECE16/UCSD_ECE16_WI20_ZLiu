@@ -4,7 +4,6 @@
 int i = 1;
 // ==== Message CODE ====== // 
 void receiveMessage(){
-  
   if (Serial.available() > 0) {
     char incomingChar = Serial.read();   // read byte from serial     
     if (incomingChar == '\n'){
@@ -29,9 +28,10 @@ int sampling_rate = 50;   //sampling rate in Hz
 unsigned long sampling_delay = calcSamplingDelay(sampling_rate);   //microseconds between samples
 unsigned long last_sample_time = 0;   //microsecond of last sample
 
-bool sending_data = true; //to send data?
+bool sending_data = true; //to send data?5
 
 void sendData(){
+    checkMessage();
     if(sending_data){
         if(millis()-last_sample_time >= sampling_delay){
             last_sample_time = millis();
@@ -42,9 +42,9 @@ void sendData(){
             Serial.print(',');
             Serial.print(accelY_Val);
             Serial.print(',');
-            Serial.print(accelZ_Val);
-            Serial.print(',');
-            Serial.println(particleSensor.getIR());
+            Serial.println(accelZ_Val);
+            // Serial.print(',');
+            // Serial.println(particleSensor.getIR());
         }
     }
     delay(10);
@@ -57,6 +57,7 @@ long calcSamplingDelay(long sampling_rate){
 void checkMessage(){
   String message = String(in_text); // converts in_text into a string
   //delay(1000);
+  Serial.print(message);
   if(message == "stop data"){
     sending_data = false; 
     //delay(1000);

@@ -11,7 +11,7 @@ void setup() {
 }
 
 void loop() {
-  Lab5();
+  Lab3();
 }
 
 void Lab1(){

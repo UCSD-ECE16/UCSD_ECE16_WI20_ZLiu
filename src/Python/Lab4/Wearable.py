@@ -50,18 +50,15 @@ class Wearable:
         test = self.connection.data.sampling_rate
 
         fs = int(test) #round to nearest int
-        np.savetxt("05_09_.csv", collected_data.data_array, delimiter=",")
+        np.savetxt("test.csv", collected_data.data_array, delimiter=",")
         
-        data_array = np.genfromtxt('05_09_.csv', delimiter=',')
+        data_array = np.genfromtxt('test.csv', delimiter=',')
         [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(data_array[:,4],fs)
         time = (data_array[:,0] - data_array[0,0])/1e6 #have time start at 0 and in seconds
         plt.clf()
         plt.plot(time, HR.normalize_signal(HR.detrend(-data_array[:,4],fs)))
         plt.plot(time, s_thresh_up)
-        print("BPM = "+str(BPM_Estimate))      
-        
-
-
+        print("BPM = "+str(BPM_Estimate))
 
 def main():
     # wearable = Wearable('/dev/cu.usbserial-14330',115200)
